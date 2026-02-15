@@ -15,6 +15,11 @@ const menuItems = [
     href: "/pos",
   },
   {
+    title: "Kasir & Staff",
+    icon: "👤",
+    href: "/staff",
+  },
+  {
     title: "Produk",
     icon: "📦",
     href: "/products",
