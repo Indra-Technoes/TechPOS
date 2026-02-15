@@ -1,2 +1,1 @@
-# TechPOS
-Point of Sale 
+
