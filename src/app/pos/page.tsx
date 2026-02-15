@@ -222,40 +222,49 @@ export default function POSPage() {
                 key={item.id}
                 className="p-4 bg-gray-50 rounded-lg border border-gray-200"
               >
-                <div className="flex justify-between items-start mb-2">
-                  <p className="font-medium text-gray-900">{item.name}</p>
+                <div className="flex justify-between items-start mb-3">
+                  <div>
+                    <p className="font-medium text-gray-900">{item.name}</p>
+                    <p className="text-sm text-gray-500 mt-1">
+                      Rp {item.sellingPrice.toLocaleString("id-ID")} / {item.unit}
+                    </p>
+                  </div>
                   <button
                     onClick={() => removeFromCart(item.id)}
-                    className="text-red-500 hover:text-red-700"
+                    className="text-red-500 hover:text-red-700 font-bold text-lg"
+                    title="Hapus dari keranjang"
                   >
                     ✕
                   </button>
                 </div>
-                <p className="text-sm text-gray-500 mb-2">
-                  Rp {item.sellingPrice.toLocaleString("id-ID")} / {item.unit}
-                </p>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                    className="w-8 h-8 bg-gray-200 rounded hover:bg-gray-300"
-                  >
-                    -
-                  </button>
-                  <input
-                    type="number"
-                    value={item.quantity}
-                    onChange={(e) =>
-                      updateQuantity(item.id, parseInt(e.target.value) || 0)
-                    }
-                    className="w-16 text-center border border-gray-300 rounded"
-                  />
-                  <button
-                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                    className="w-8 h-8 bg-gray-200 rounded hover:bg-gray-300"
-                  >
-                    +
-                  </button>
-                  <p className="ml-auto font-semibold text-gray-900">
+                
+                <div className="flex items-center justify-between mt-3">
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                      className="w-9 h-9 bg-red-500 text-white rounded-lg hover:bg-red-600 font-bold text-lg flex items-center justify-center"
+                      title="Kurangi jumlah"
+                    >
+                      −
+                    </button>
+                    <input
+                      type="number"
+                      value={item.quantity}
+                      onChange={(e) =>
+                        updateQuantity(item.id, parseInt(e.target.value) || 0)
+                      }
+                      className="w-16 text-center border-2 border-gray-300 rounded-lg py-1 font-semibold text-gray-900"
+                      min="1"
+                    />
+                    <button
+                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                      className="w-9 h-9 bg-green-500 text-white rounded-lg hover:bg-green-600 font-bold text-lg flex items-center justify-center"
+                      title="Tambah jumlah"
+                    >
+                      +
+                    </button>
+                  </div>
+                  <p className="font-bold text-lg text-blue-600">
                     Rp {item.subtotal.toLocaleString("id-ID")}
                   </p>
                 </div>
