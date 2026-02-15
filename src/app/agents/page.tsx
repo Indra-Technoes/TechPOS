@@ -9,15 +9,15 @@ interface Agent {
   name: string;
   type: "agent" | "reseller";
   phone: string;
-  email: string;
-  address: string;
-  city: string;
-  joinDate: string;
+  email?: string | null;
+  address?: string | null;
+  city?: string | null;
+  joinDate?: string | null;
   status: "active" | "inactive" | "suspended";
-  totalOrders: number;
-  totalRevenue: number;
-  commission: number;
-  level?: string;
+  totalOrders?: number;
+  totalRevenue?: number;
+  commissionRate?: number;
+  level?: string | null;
 }
 
 export default function AgentsPage() {
@@ -26,9 +26,28 @@ export default function AgentsPage() {
   const [typeFilter, setTypeFilter] = useState<string>("all");
 
   useEffect(() => {
-    // Sample data - replace with actual API call
-    const sampleAgents: Agent[] = [
-      {
+    fetchAgents();
+  }, []);
+
+  const fetchAgents = async () => {
+    try {
+      const response = await fetch("/api/agents");
+      if (response.ok) {
+        const data = await response.json();
+        setAgents(data);
+      } else {
+        // Fallback to sample data if API fails
+        setAgents(sampleAgents);
+      }
+    } catch {
+      // Fallback to sample data
+      setAgents(sampleAgents);
+    }
+  };
+
+  // Sample data for fallback
+  const sampleAgents: Agent[] = [
+    {
         id: 1,
         code: "AGT-001",
         name: "Budi Santoso",
@@ -41,7 +60,7 @@ export default function AgentsPage() {
         status: "active",
         totalOrders: 45,
         totalRevenue: 125000000,
-        commission: 5,
+        commissionRate: 5,
         level: "Gold",
       },
       {
@@ -57,7 +76,7 @@ export default function AgentsPage() {
         status: "active",
         totalOrders: 28,
         totalRevenue: 65000000,
-        commission: 10,
+        commissionRate: 10,
         level: "Silver",
       },
       {
@@ -73,7 +92,7 @@ export default function AgentsPage() {
         status: "active",
         totalOrders: 32,
         totalRevenue: 89000000,
-        commission: 5,
+        commissionRate: 5,
         level: "Silver",
       },
       {
@@ -89,7 +108,7 @@ export default function AgentsPage() {
         status: "inactive",
         totalOrders: 12,
         totalRevenue: 28000000,
-        commission: 10,
+        commissionRate: 10,
         level: "Bronze",
       },
       {
@@ -105,7 +124,7 @@ export default function AgentsPage() {
         status: "active",
         totalOrders: 58,
         totalRevenue: 156000000,
-        commission: 5,
+        commissionRate: 5,
         level: "Platinum",
       },
     ];
@@ -326,7 +345,7 @@ export default function AgentsPage() {
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{agent.commission}%</div>
+                  <div className="text-sm text-gray-900">{agent.commissionRate}%</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span

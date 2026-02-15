@@ -249,12 +249,19 @@ export const aiRecommendations = sqliteTable("ai_recommendations", {
 // Tabel Agents (Agen/Reseller)
 export const agents = sqliteTable("agents", {
   id: integer("id").primaryKey({ autoIncrement: true }),
+  code: text("code").notNull().unique(),
   name: text("name").notNull(),
   email: text("email"),
   phone: text("phone").notNull(),
   address: text("address"),
-  commissionRate: real("commission_rate").default(0), // persentase komisi
+  city: text("city"),
+  type: text("type").notNull().default("agent"), // agent, reseller
+  level: text("level"), // Platinum, Gold, Silver, Bronze
+  commissionRate: real("commission_rate").default(5), // persentase komisi
   status: text("status").default("active"), // active, inactive, suspended
+  joinDate: integer("join_date", { mode: "timestamp" }),
+  totalOrders: integer("total_orders").default(0),
+  totalRevenue: real("total_revenue").default(0),
   createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
   updatedAt: integer("updated_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
 });
