@@ -25,26 +25,6 @@ export default function AgentsPage() {
   const [filter, setFilter] = useState<string>("all");
   const [typeFilter, setTypeFilter] = useState<string>("all");
 
-  useEffect(() => {
-    fetchAgents();
-  }, []);
-
-  const fetchAgents = async () => {
-    try {
-      const response = await fetch("/api/agents");
-      if (response.ok) {
-        const data = await response.json();
-        setAgents(data);
-      } else {
-        // Fallback to sample data if API fails
-        setAgents(sampleAgents);
-      }
-    } catch {
-      // Fallback to sample data
-      setAgents(sampleAgents);
-    }
-  };
-
   // Sample data for fallback
   const sampleAgents: Agent[] = [
     {
@@ -128,7 +108,25 @@ export default function AgentsPage() {
         level: "Platinum",
       },
     ];
-    setAgents(sampleAgents);
+
+  const fetchAgents = async () => {
+    try {
+      const response = await fetch("/api/agents");
+      if (response.ok) {
+        const data = await response.json();
+        setAgents(data);
+      } else {
+        // Fallback to sample data if API fails
+        setAgents(sampleAgents);
+      }
+    } catch {
+      // Fallback to sample data
+      setAgents(sampleAgents);
+    }
+  };
+
+  useEffect(() => {
+    fetchAgents();
   }, []);
 
   const getStatusBadge = (status: string) => {
@@ -180,8 +178,8 @@ export default function AgentsPage() {
     agents: agents.filter((a) => a.type === "agent").length,
     resellers: agents.filter((a) => a.type === "reseller").length,
     active: agents.filter((a) => a.status === "active").length,
-    totalRevenue: agents.reduce((sum, a) => sum + a.totalRevenue, 0),
-    totalOrders: agents.reduce((sum, a) => sum + a.totalOrders, 0),
+    totalRevenue: agents.reduce((sum, a) => sum + (a.totalRevenue || 0), 0),
+    totalOrders: agents.reduce((sum, a) => sum + (a.totalOrders || 0), 0),
   };
 
   return (
@@ -306,7 +304,7 @@ export default function AgentsPage() {
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm font-medium text-gray-900">{agent.name}</div>
                   <div className="text-xs text-gray-500">
-                    Bergabung: {new Date(agent.joinDate).toLocaleDateString("id-ID")}
+                    Bergabung: {agent.joinDate ? new Date(agent.joinDate).toLocaleDateString("id-ID") : "-"}
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
@@ -341,7 +339,7 @@ export default function AgentsPage() {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm font-medium text-gray-900">
-                    Rp {(agent.totalRevenue / 1000000).toFixed(1)}M
+                    Rp {((agent.totalRevenue || 0) / 1000000).toFixed(1)}M
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">

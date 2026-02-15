@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { agents } from "@/db/schema";
+import { desc } from "drizzle-orm";
 
 // GET all agents
 export async function GET() {
   try {
-    const allAgents = await db.select().from(agents).orderBy(agents.id.desc());
+    const allAgents = await db.select().from(agents).orderBy(desc(agents.id));
     return NextResponse.json(allAgents);
   } catch (error) {
     console.error("Error fetching agents:", error);
@@ -26,6 +27,7 @@ export async function POST(request: Request) {
     const code = `${prefix}-${String(count.length + 1).padStart(3, "0")}`;
     
     const newAgent = await db.insert(agents).values({
+      code,
       name,
       email: email || null,
       phone,
